@@ -1,9 +1,26 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
 
+[project]
+name = "honeydew"
+version = "0.0.1"
+authors = [
+  { name="jmmaa", email="withketa@gmail.com" },
+]
+description = "A simple framework for creating commands for dew"
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
 
-
-
-
-
+[project.urls]
+Homepage = "https://github.com/jmmaa/honeydew"
+# Issues = "https://github.com/pypa/sampleproject/issues"
 
 [tool.ruff]
 line-length = 88
@@ -15,16 +32,13 @@ indent-style = "space"
 line-ending = "auto"
 docstring-code-format = true
 
-
 [tool.ruff.lint]
 select = ['ALL']
 ignore = ['COM812']
 exclude = ["tests", "examples"]
 
-
 [tool.ruff.lint.pydocstyle]
 convention = "google"
-
 
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 72

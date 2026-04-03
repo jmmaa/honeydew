@@ -1,6 +1,10 @@
 # python
-
-
 .venv
 __pycache__
 
+# python build
+dist
+*.egg-info
+
+# scratch
+sample.py
