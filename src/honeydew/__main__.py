@@ -1,24 +1,34 @@
-import honeydew
-
-root = honeydew.create_root("/")
+from honeydew import command
 
 
-@root.command(name="sample")
-def sample() -> str:
-
-    return "sample"
-
-
-@root.command(name="sample2")
-def sample2() -> str:
-
-    return "sample2"
+@command("root")
+def root():
+    return "root"
 
 
-@sample2.command("sample22")
-def sample22() -> str:
-    return "sample22"
+@root.command("addr")
+def addr() -> str:
+
+    return "addr command"
 
 
-cmd = root.get_func_data("sample2 sample22")
-print(cmd.func())
+@addr.command("str")
+def _str(level: str, active: str) -> str:
+
+    return f"addr str command w/ level = {level} and active = {active}"
+
+
+@addr.command("dex")
+def dex(level: str, active: str) -> str:
+
+    return f"addr dex command w/ level = {level} and active = {active}"
+
+
+cmd = root.parse_args("addr")
+print(cmd())
+
+cmd = root.parse_args("addr str 10 true")
+print(cmd())
+
+cmd = root.parse_args("addr dex level = 10 active = true")
+print(cmd())
