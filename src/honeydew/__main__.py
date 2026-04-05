@@ -13,7 +13,7 @@ def addr() -> str:
 
 
 @addr.command("str")
-def _str(level: str, active: str) -> str:
+def _str(level: str = "10", active: str = "true") -> str:
 
     return f"addr str command w/ level = {level} and active = {active}"
 
@@ -24,11 +24,14 @@ def dex(level: str, active: str) -> str:
     return f"addr dex command w/ level = {level} and active = {active}"
 
 
-cmd = root.parse_args("addr")
-print(cmd())
+res = root.execute("addr")
+print(res)
 
-cmd = root.parse_args("addr str 10 true")
-print(cmd())
+res = root.execute("addr str 10 true")
+print(res)
 
-cmd = root.parse_args("addr dex level = 10 active = true")
-print(cmd())
+res = root.execute("addr str")
+print(res)
+
+res = root.execute("addr dex level = 10 active = true")
+print(res)

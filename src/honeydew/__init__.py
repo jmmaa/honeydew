@@ -124,7 +124,44 @@ class CommandTree:
 
         args = dew.parse(cmd)
 
-        return resolve_command(args, self)
+        return self.get_command(args, self)
+
+    def execute(self, cmd: str):
+
+        args, func = self.parse_args(cmd)
+
+        return parameterize(args, func)()
+
+    def get_command(
+        self, args: list[Argument], tree: CommandTree
+    ) -> tuple[list[Argument], t.Callable[..., MaybeAwaitable[t.Any | None]]]:
+
+        arg = args[0] if args else None
+
+        match arg:
+            case Argument(PositionalArgument(value)):
+                for child in tree.children:
+                    if child.data.name == value:
+                        # consume the arg if confirmed to exist
+                        args.pop(0)
+
+                        if len(args) != 0:
+                            return self.get_command(args, child)
+
+                        func = child.data.func
+
+                        return args, func
+                func = tree.data.func
+
+                return args, func
+
+            case Argument(KeywordArgument(value)):
+                func = tree.data.func
+
+                return args, func
+
+            case _:
+                raise Exception(f"invalid argument: {arg}")
 
 
 def command(
@@ -139,11 +176,6 @@ def command(
     return __wrap__
 
 
-def parse_command(inp: str):
-
-    return dew.parse(inp)
-
-
 async def maybe_await(obj: MaybeAwaitable[T]) -> T:
     if inspect.iscoroutine(obj):
         return await obj
@@ -152,7 +184,7 @@ async def maybe_await(obj: MaybeAwaitable[T]) -> T:
 
 
 def parameterize(
-    func: t.Callable[..., MaybeAwaitable[t.Any | None]], args: list[Argument]
+    args: list[Argument], func: t.Callable[..., MaybeAwaitable[t.Any | None]]
 ) -> t.Callable[[], MaybeAwaitable[t.Any | None]]:
 
     _args = []
